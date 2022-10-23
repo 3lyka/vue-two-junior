@@ -1,64 +1,75 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-typescript" target="_blank" rel="noopener">typescript</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div class="hello" v-for="posts in post">
+	<h3>Название поста : {{ posts.title }}</h3>
+	<p>Описание : {{ posts.body }}</p>
+  </div>
+
+  .<div class="container">
+    <div class="row">
+	<h2>Создание поста</h2>
+		<form method="post">
+			<input @input="inputTitle" v-bind:value="title" class="title__post" type="text" name="" id="" placeholder="Название поста">
+			<input @input="inputBody" v-bind:value="body" class="body__post" type="text" name="" id="" placeholder="Описание поста">
+			<button class="btn button__add-post" type="submit" @click.prevent="createPost">Добавить</button>
+		</form>
+	</div>
   </div>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-
-@Options({
-  props: {
-    msg: String
-  }
-})
-export default class HelloWorld extends Vue {
-  msg!: string
-}
+	export default {
+		data() {
+			return {
+				post: [
+					{id:1, title: 'Первый пост', body:"описание"},
+					{id:2, title: 'Второй пост', body:"описание"},
+					{id:3, title: 'Третий пост', body:"описание поста три"},
+				],
+				title: '',
+				body: '',
+			}
+		},
+		methods: {
+			createPost() {
+				const newPost = {
+					id: Date.now(),
+					title:this.title,
+					body:this.body,
+				}
+				this.post.push(newPost);
+				this.title = '';
+				this.body = '';
+			},
+			inputTitle(event: any): void {
+				this.title = event.target.value;
+			},
+			inputBody(event: any) {
+				this.body = event.target.value;
+			}
+		},
+	}
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+	.title__post, .body__post {
+		padding: 10px;
+		margin: 10px;
+		border-radius: 30px;
+		text-align: center;
+			&.disabled {
+				display: none;
+			}
+	}
+	.btn {
+		&.button__add-post {
+			padding: 15px;
+			margin: 10px;
+			border-radius: 30px;
+			text-align: center;
+			background-color: none;
+			font-weight: 700;
+			border: none;
+			cursor: pointer;
+		}
+	}
 </style>
